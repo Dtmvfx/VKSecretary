@@ -15,7 +15,6 @@ def page_goto(page, url, signals, wait_until='load'):
     try: page.goto(url, timeout=180000)
     except Exception:
         for i in range(2):
-            sleep(60)
             try: page.reload()
             except Exception:
                 if i == 4: signals.log_signal.emit(f'!ЗАВИСАНИЕ СТРАНИЦЫ! Адрес: [{url}] недоступен длительное время. Перезапусти при необходимости неотработанные функции позже.')
