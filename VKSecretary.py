@@ -121,7 +121,7 @@ def outgoing_requests_vk(page, signals):
             page_goto(page, 'https://vk.com/friends?section=all', signals)
 
             start_time = time.time(); stop_time = random.randint(1, 20); link_ff_list = []
-            for i in range (100):
+            for _ in range (100):
                 page.mouse.wheel(0, 99999)
                 if time.time() - start_time > stop_time: break
 
