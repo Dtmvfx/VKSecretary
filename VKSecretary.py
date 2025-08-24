@@ -38,8 +38,10 @@ def liking_vk(page, signals):
     stories = 0; posts = 0
     try:
         signals.log_signal.emit('\n~~~~~~~~~~~~~~~~~~~~~~ ЛАЙКИНГ [ВК] ~~~~~~~~~~~~~~~~~~~~~~\n')
-        stories = 0; posts = 0
-        group_for_like_list = [f'https://vk.com{id_account}']
+        name_my_community = line_edit.text()
+        if name_my_community: group_for_like_list = [f'https://vk.com{id_account}', name_my_community]
+        else: group_for_like_list = [f'https://vk.com{id_account}']
+
         for group in group_for_like_list:
             page_goto(page, group, signals)
             page.evaluate("window.scrollBy(0, 3000)"); sleep(3)
