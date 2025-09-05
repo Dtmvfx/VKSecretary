@@ -25,7 +25,7 @@ def page_goto(page, url, signals, wait_until='load'):
 def start_vk(page, signals):
     try:
         global id_account
-        page_goto(page, 'https://vk.com', signals)
+        page_goto(page, 'https://vk.ru', signals)
         signals.log_signal.emit(f'У ВАС 3 МИНУТЫ НА ВХОД ПО QR-коду')
         page.wait_for_selector('//*[text()="Профиль"]', timeout=180000)
         if page.locator('//*[@aria-label="Закрыть"]').is_visible(): page.click('//*[@aria-label="Закрыть"]')
@@ -39,8 +39,8 @@ def liking_vk(page, signals):
     try:
         signals.log_signal.emit('\n~~~~~~~~~~~~~~~~~~~~~~ ЛАЙКИНГ [ВК] ~~~~~~~~~~~~~~~~~~~~~~\n')
         name_my_community = line_edit.text()
-        if name_my_community: group_for_like_list = [f'https://vk.com{id_account}', name_my_community]
-        else: group_for_like_list = [f'https://vk.com{id_account}']
+        if name_my_community: group_for_like_list = [f'https://vk.ru{id_account}', name_my_community]
+        else: group_for_like_list = [f'https://vk.ru{id_account}']
 
         for group in group_for_like_list:
             page_goto(page, group, signals)
@@ -59,7 +59,7 @@ def liking_vk(page, signals):
                        page.click('//*[@id="like_share_send"]')
                     else: page.click('//*[@aria-label="Закрыть"][not (@data-testid)]')
         signals.log_signal.emit('Мои группы/профили ВК: полайкано и отрепощено')
-        page_goto(page, 'https://vk.com', signals); sleep(10)
+        page_goto(page, 'https://vk.ru', signals); sleep(10)
         page.get_by_test_id('story_card_stories').nth(2).click()
         if page.locator('//div[@class="stories_volume_control high"]').count()>0: page.click('//div[@class="stories_volume_control high"]')
         for stories in range(51):
@@ -67,7 +67,7 @@ def liking_vk(page, signals):
             page.get_by_test_id('story_like_button').click(delay=1500)
             page.mouse.click(box["x"] + 200, box["y"])
         page.locator('//*[@class="stories_layer_close"]').click()
-        page_goto(page, 'https://vk.com', signals)
+        page_goto(page, 'https://vk.ru', signals)
         for posts in range (151):
             page.mouse.wheel(0, 1400); page.hover('(//div[@class="PostButtonReactions__icon "])[1]')
             page.keyboard.press('ArrowUp'); page.keyboard.press('ArrowUp')
@@ -80,7 +80,7 @@ def dell_out_requests_api_web_vk(page, signals):
     try:
         signals.log_signal.emit(f'\n~~~~~~~~~~~~~~~~~~~~~~ УДАЛЯЕМ ИСХОДЯЩИЕ ЗАЯВКИ В ДРУЗЬЯ И ПОДПИСКИ [ВК] ~~~~~~~~~~~~~~~~~~~~~~\n')
         dell_out_request = 0
-        page_goto(page, 'https://vk.com/friends?section=out_requests', signals, wait_until='domcontentloaded')
+        page_goto(page, 'https://vk.ru/friends?section=out_requests', signals, wait_until='domcontentloaded')
         for _ in range(5): page.mouse.wheel(0, 99999)
         for element in  page.locator('//*[text()="Отменить заявку" or text()="Отписаться"]').element_handles():
             element.click(); dell_out_request += 1
@@ -91,7 +91,7 @@ def dell_out_requests_api_web_vk(page, signals):
 def incoming_requests_vk(page, signals):
     try:
         signals.log_signal.emit(f'\n~~~~~~~~~~~~~~~~~~~~~~ СМОТРИМ ВХОДЯЩИЕ ЗАЯВКИ В ДРУЗЬЯ [ВК] ~~~~~~~~~~~~~~~~~~~~~~\n            Блок по дефолту: ЧС // СТОП-СЛОВО // ВОЗРАСТ (<20) // ЛИМИТ ДРУЗЕЙ (<500)\n')
-        page_goto(page, 'https://vk.com/friends?section=requests', signals)
+        page_goto(page, 'https://vk.ru/friends?section=requests', signals)
         while page.locator('//*[text()="Новые"]').count()>0:
             with page.expect_navigation():
                 page.locator('//div[@data-testid="userrichcell-name"]').nth(0).click()
@@ -109,7 +109,7 @@ def incoming_requests_vk(page, signals):
                 or year_of_birth > 2005):
                 page.click('text="Отклонить заявку"'); signals.log_signal.emit(f'Юзер ОТКЛОНЁН // Инфо: {user_info_lower}\n------------------------------')
             else: page.click('text="Принять заявку"'); signals.log_signal.emit(f'Юзер ПРИНЯТ в друзья // Инфо: {user_info_lower}\n------------------------------')
-            page_goto(page, 'https://vk.com/friends?section=requests', signals)
+            page_goto(page, 'https://vk.ru/friends?section=requests', signals)
         else: signals.log_signal.emit('Новых заявок в друзья пока нет\n'); return
     except Exception as e: signals.log_signal.emit(f'\n!!!!!ЧТО-ТО СЛОМАЛОСЬ ПРИ ПРОВЕРКЕ ВХОДЯЩИХ ЗАЯВОК [ВК]!!!!! // ошибка: {e}\n')
 
@@ -120,7 +120,7 @@ def outgoing_requests_vk(page, signals):
         out_requests = 0
 
         while out_requests < 30:
-            page_goto(page, 'https://vk.com/friends?section=all', signals)
+            page_goto(page, 'https://vk.ru/friends?section=all', signals)
 
             start_time = time.time(); stop_time = random.randint(1, 20); link_ff_list = []
             for _ in range (100):
@@ -129,7 +129,7 @@ def outgoing_requests_vk(page, signals):
 
             page.click(f'(//div[@data-testid="userrichcell-after"])[{random.randint(1, 10)}]')
             link_ff = page.locator('//a[@data-testid="dropdownactionsheet-item"]').get_attribute('href')
-            page_goto(page, f'https://vk.com{link_ff}', signals)
+            page_goto(page, f'https://vk.ru{link_ff}', signals)
             page.click('//div[@role="tablist"]//*[text()="Друзья онлайн"]')
             online_frs_cnt = int(page.locator('//span[text()="Друзья онлайн"]/following-sibling::span').inner_text())
 
@@ -291,7 +291,7 @@ if __name__ == "__main__":
         cb.setChecked(True)
         layout2.addWidget(cb)
     line_edit = QLineEdit()
-    line_edit.setPlaceholderText("адрес группы для инвайта: http://...")
+    line_edit.setPlaceholderText("адрес группы для инвайта: https://...")
     layout2.addWidget(line_edit)
     group2.setFixedSize(400, 200)
     def check_groups():
